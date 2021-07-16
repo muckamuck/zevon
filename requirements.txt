@@ -1,0 +1,4 @@
+bumpversion>=0.5
+pdbpp>=0.9
+twine>=1.12
+awscli
