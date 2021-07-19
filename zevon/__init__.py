@@ -1,1 +1,1 @@
-from zevon.flask_lamda import FlaskLambda  # noqa
+from zevon.flask_lambda import FlaskLambda  # noqa

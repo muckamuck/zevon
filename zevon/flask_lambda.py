@@ -3,7 +3,7 @@ import json
 import logging
 import base64
 
-from sample_event import sample
+from zevon.sample_event import sample
 
 try:
     from urllib import urlencode
