@@ -103,8 +103,8 @@ class FlaskLambda(Flask):
         ))
 
         body = encoded_body.decode('utf-8')
-        logger.debug(f'{encoded_body=}')
-        logger.debug(f'{body=}')
+        logger.debug(f'encoded_body={encoded_body}')
+        logger.debug(f'body={body}')
 
         content_type = response.response_headers.get('Content-Type')
         if content_type.startswith('image'):
@@ -116,7 +116,7 @@ class FlaskLambda(Flask):
             }
 
             the_answer = json.dumps(wrk)
-            logger.info(f'{the_answer=}')
+            logger.info(f'the_answer={the_answer}')
             return wrk
         else:
             return {
