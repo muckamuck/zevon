@@ -18,5 +18,8 @@ welcome_html = '''<html>
                 <li>Optionally, trust an arbitrary AWS service like cognito or S3</li>
             </ul>
         </div>
+        <div>
+            Zevon version: 0.0.1
+        </div>
     </body>
 </html>'''
