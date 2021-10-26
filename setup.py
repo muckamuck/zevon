@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='Zevon',
-    version='0.1.0',
+    version='0.2.0',
     packages=['zevon'],
     description='Zevon - turn a API Gateway / Lambda event to a Flask thing',
     author='Chuck Muckamuck (obviously a pseudonym)',
