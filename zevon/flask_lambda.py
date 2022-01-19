@@ -90,6 +90,7 @@ class Response(object):
 
 class FlaskLambda(Flask):
     def __call__(self, event, context):
+        logger.debug(json.dumps(event))
         if 'httpMethod' not in event:
             # In this "context" `event` is `environ` and
             # `context` is `start_response`, meaning the request didn't
