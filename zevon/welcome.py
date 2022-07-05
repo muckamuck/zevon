@@ -19,7 +19,7 @@ welcome_html = '''<html>
             </ul>
         </div>
         <div>
-            Zevon version: 0.2.0
+            Zevon version: 0.2.1
         </div>
     </body>
 </html>'''
