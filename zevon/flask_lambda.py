@@ -2,28 +2,36 @@ import sys
 import json
 import logging
 import base64
+import datetime
+from io import StringIO
+from urllib.parse import urlencode
 
 from zevon.sample_event import sample
-
-try:
-    from urllib import urlencode
-except ImportError:
-    from urllib.parse import urlencode
-
 from flask import Flask
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    try:
-        from StringIO import StringIO
-    except ImportError:
-        from io import StringIO
 
-from werkzeug.wrappers import BaseRequest
+from werkzeug.wrappers import Request
 
 OCTET_STREAM = 'application/octet-stream'
 logger = logging.getLogger(__name__)
+
+
+def json_converter(o):
+    '''
+    Helper thing to convert dates for JSON modulet.
+
+    Args:
+        o - the thing to dump as string.
+
+    Returns:
+        if an instance of datetime the a string else None
+    '''
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
+    elif isinstance(o, StringIO):
+        return o.getvalue()
+
+    return None
 
 
 def make_environ(event):
@@ -73,9 +81,13 @@ def make_environ(event):
     else:
         environ['CONTENT_LENGTH'] = ''
 
-    BaseRequest(environ)
+    try:
+        Request(environ)
+        return environ
+    except Exception as wtf:
+        logger.error(wtf, exc_info=True)
+        return None
 
-    return environ
 
 
 class Response(object):

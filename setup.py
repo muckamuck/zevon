@@ -1,6 +1,5 @@
 from setuptools import setup
 
-
 setup(
     name='Zevon',
     version='0.2.3',
@@ -9,7 +8,7 @@ setup(
     author='Chuck Muckamuck (obviously a pseudonym)',
     author_email='Chuck.Muckamuck@gmail.com',
     install_requires=[
-        'Flask<=2.0.2',
-        'Werkzeug<=2.0.3'
+        'Flask>=2.1',
+        'Werkzeug>=2.1'
     ]
 )
