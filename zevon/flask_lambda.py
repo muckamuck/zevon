@@ -13,6 +13,12 @@ from flask import Flask
 from werkzeug.wrappers import Request
 
 OCTET_STREAM = 'application/octet-stream'
+
+binary_things = [
+    'image',
+    'font'
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -120,7 +126,8 @@ class FlaskLambda(Flask):
         logger.debug(f'body={body}')
 
         content_type = response.response_headers.get('Content-Type')
-        if content_type.startswith('image') or content_type == OCTET_STREAM:
+        content_family = content_type.split('/')[0]
+        if content_family in binary_things or content_type == OCTET_STREAM:
             wrk = {
                 'statusCode': response.status,
                 'headers': response.response_headers,
