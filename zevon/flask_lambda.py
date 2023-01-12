@@ -3,6 +3,7 @@ import json
 import logging
 import base64
 import datetime
+import time
 from io import StringIO
 from urllib.parse import urlencode
 
@@ -19,6 +20,7 @@ binary_things = [
     'font'
 ]
 
+init_time = int(time.time())
 logger = logging.getLogger(__name__)
 
 
@@ -38,6 +40,22 @@ def json_converter(o):
         return o.getvalue()
 
     return None
+
+
+def create_request_data(event):
+    request_data = {}
+    try:
+        request_data['id'] = event.get('requestContext', {}).get('requestId', None)
+        request_data['requestTimeEpoch'] = event.get('requestContext', {}).get('requestTimeEpoch', None)
+        request_data['initTimeEpoch'] = init_time
+        request_data['lambdaAge'] = int(time.time()) - init_time
+        request_data['sourceIp'] = event.get('requestContext', {}).get('identity', {}).get('sourceIp', None)
+        request_data['userArn'] = event.get('requestContext', {}).get('identity', {}).get('userArn', None)
+        request_data['userAgent'] = event.get('requestContext', {}).get('identity', {}).get('userAgent', None)
+    except Exception as ruh_roh_shaggy:
+        logger.error(ruh_roh_shaggy, exc_info=False)
+
+    return request_data
 
 
 def make_environ(event):
@@ -95,7 +113,6 @@ def make_environ(event):
         return None
 
 
-
 class Response(object):
     def __init__(self):
         self.status = None
@@ -108,6 +125,7 @@ class Response(object):
 
 class FlaskLambda(Flask):
     def __call__(self, event, context):
+        self.request_data = create_request_data(event)
         if 'httpMethod' not in event:
             # In this "context" `event` is `environ` and
             # `context` is `start_response`, meaning the request didn't
