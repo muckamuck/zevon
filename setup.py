@@ -9,6 +9,6 @@ setup(
     author_email='Chuck.Muckamuck@gmail.com',
     install_requires=[
         'Flask>=2.1',
-        'Werkzeug>=2.1'
+        'Werkzeug<2.2.3'
     ]
 )
