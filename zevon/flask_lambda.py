@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 import logging
@@ -22,6 +23,15 @@ binary_things = [
 
 init_time = int(time.time())
 logger = logging.getLogger(__name__)
+
+log_levels = {
+    'DEBUG': logging.DEBUG,
+    'INFO': logging.INFO,
+    'WARNING': logging.WARNING,
+    'ERROR': logging.ERROR
+}
+log_level = os.environ.get('ZEVON_LOG_LEVEL', 'WARNING')
+logger.setLevel(log_levels.get(log_level, logging.WARNING))
 
 
 def json_converter(o):
@@ -62,7 +72,13 @@ def make_environ(event):
     logger.info(json.dumps(event, indent=2))
     environ = {}
 
-    event['headers']['x-zvn-caller'] = 'chuck'
+    caller = event.get('requestContext', {}).get('identity', {}).get('userArn', 'anonymous')
+
+    if caller is None:
+        caller = 'anonymous'
+
+    event['headers']['x-zvn-caller'] = caller
+    logger.info(f'{caller=} [e00da0624721]')
     for hdr_name, hdr_value in event['headers'].items():
         hdr_name = hdr_name.replace('-', '_').upper()
         if hdr_name in ['CONTENT_TYPE', 'CONTENT_LENGTH']:
@@ -125,9 +141,6 @@ class Response(object):
 
 
 class FlaskLambda(Flask):
-    def get_caller(self):
-        return "fred"
-
     def get_event(self):
         return self.event
 
