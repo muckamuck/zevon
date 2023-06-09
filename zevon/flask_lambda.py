@@ -62,6 +62,7 @@ def make_environ(event):
     logger.info(json.dumps(event, indent=2))
     environ = {}
 
+    event['headers']['x-zvn-caller'] = 'chuck'
     for hdr_name, hdr_value in event['headers'].items():
         hdr_name = hdr_name.replace('-', '_').upper()
         if hdr_name in ['CONTENT_TYPE', 'CONTENT_LENGTH']:
@@ -124,7 +125,14 @@ class Response(object):
 
 
 class FlaskLambda(Flask):
+    def get_caller(self):
+        return "fred"
+
+    def get_event(self):
+        return self.event
+
     def __call__(self, event, context):
+        self.event = event
         self.request_data = create_request_data(event)
         if 'httpMethod' not in event:
             # In this "context" `event` is `environ` and
